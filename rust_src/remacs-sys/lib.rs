@@ -240,12 +240,21 @@ pub struct Lisp_Vector {
     pub contents: [Lisp_Object; 1],
 }
 
+// No C equivalent.  Generic type for a vectorlike with one or more
+// LispObject slots after the header.
+#[repr(C)]
+pub struct Lisp_Vectorlike_With_Slots {
+    pub header: Lisp_Vectorlike_Header,
+    // actually any number of items... not sure how to express this
+    pub contents: [Lisp_Object; 1],
+}
+
 #[repr(C)]
 pub struct Lisp_Bool_Vector {
     pub _header: Lisp_Vectorlike_Header,
     pub size: EmacsInt,
     // actually any number of items again
-    pub _data: [bits_word; 1],
+    pub data: [bits_word; 1],
 }
 
 // This is the set of data types that share a common structure.
@@ -1050,6 +1059,9 @@ extern "C" {
     pub fn Fcurrent_buffer() -> Lisp_Object;
     pub fn Fget_buffer(buffer_or_name: Lisp_Object) -> Lisp_Object;
     pub fn Fsignal(error_symbol: Lisp_Object, data: Lisp_Object) -> !;
+    pub fn Ffuncall(nargs: ptrdiff_t, args: *mut Lisp_Object) -> Lisp_Object;
+    pub fn Fconcat(nargs: ptrdiff_t, args: *mut Lisp_Object) -> Lisp_Object;
+    pub fn Fnconc(nargs: ptrdiff_t, args: *mut Lisp_Object) -> Lisp_Object;
 
     pub fn make_float(float_value: c_double) -> Lisp_Object;
     pub fn make_string(s: *const c_char, length: ptrdiff_t) -> Lisp_Object;
@@ -1068,7 +1080,6 @@ extern "C" {
         depth: c_int,
         ht: Lisp_Object,
     ) -> bool;
-    pub fn call2(fn_: Lisp_Object, arg1: Lisp_Object, arg2: Lisp_Object) -> Lisp_Object;
 
     // These signal an error, therefore are marked as non-returning.
     pub fn circular_list(tail: Lisp_Object) -> !;

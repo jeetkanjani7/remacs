@@ -19,11 +19,13 @@ extern crate libc;
 extern crate rand;
 extern crate sha1;
 extern crate sha2;
+extern crate itertools;
 
 mod lisp;
+#[macro_use]
+mod eval;
 mod lists;
 mod marker;
-mod eval;
 mod floatfns;
 mod math;
 mod numbers;
@@ -89,6 +91,9 @@ pub use lists::Fget;
 pub use lists::Fput;
 pub use lists::Flist;
 pub use lists::Fmake_list;
+pub use lists::Fmapconcat;
+pub use lists::Fmapcar;
+pub use lists::Fmapc;
 pub use floatfns::extract_float;
 pub use numbers::Frandom;
 pub use objects::Fequal;
@@ -204,6 +209,10 @@ pub extern "C" fn rust_init_syms() {
         defsubr(&*lists::Slist);
         defsubr(&*lists::Smake_list);
         defsubr(&*lists::Ssafe_length);
+        defsubr(&*lists::Smapconcat);
+        defsubr(&*lists::Smapcar);
+        defsubr(&*lists::Smapc);
+        defsubr(&*lists::Smapcan);
         defsubr(&*marker::Smarkerp);
         defsubr(&*strings::Sstringp);
         defsubr(&*strings::Sbase64_encode_string);
