@@ -38,6 +38,7 @@ mod str2sig;
 mod multibyte;
 mod buffers;
 mod windows;
+mod threads;
 
 #[cfg(all(not(test), target_os = "macos"))]
 use alloc_unexecmacosx::OsxUnexecAlloc;
